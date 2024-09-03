@@ -1,9 +1,16 @@
 import CryptoJS from 'crypto-js';
 
 const DERIVE_PASSWORD_PATH = 0x80505744;
-const PASSWORD_LENGTH = 20;
 
-export function generatePassword(seed: string, account: string): string {
+export interface PasswordOptions {
+  length: number;
+  useUppercase: boolean;
+  useLowercase: boolean;
+  useNumbers: boolean;
+  useSpecialChars: boolean;
+}
+
+export function generatePassword(seed: string, account: string, options: PasswordOptions): string {
   const data = seed + account;
   const hash = CryptoJS.SHA256(data);
   
@@ -19,10 +26,19 @@ export function generatePassword(seed: string, account: string): string {
   );
   const entropy = hmac.toString(CryptoJS.enc.Hex);
 
-  const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
+  let charset = '';
+  if (options.useUppercase) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  if (options.useLowercase) charset += 'abcdefghijklmnopqrstuvwxyz';
+  if (options.useNumbers) charset += '0123456789';
+  if (options.useSpecialChars) charset += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+
+  if (charset === '') {
+    throw new Error('At least one character set must be selected');
+  }
+
   let password = '';
   
-  for (let i = 0; i < PASSWORD_LENGTH; i++) {
+  for (let i = 0; i < options.length; i++) {
     const index = parseInt(entropy.substr(i * 2, 2), 16) % charset.length;
     password += charset[index];
   }

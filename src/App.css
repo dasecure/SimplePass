@@ -40,3 +40,50 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Add these styles to your existing App.css file */
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.generator-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.generator-container > * {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .main-content {
+    padding: 2rem;
+  }
+
+  .generator-container {
+    flex-direction: row;
+  }
+}
+
+/* Add responsive styles for your components */
+@media (max-width: 767px) {
+  .generator-container > * {
+    width: 100%;
+  }
+}
+
+/* You may need to add more specific styles for your components */
